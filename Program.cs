@@ -3,44 +3,32 @@ using System.Threading;
 
 class Program
 {
-    public static void Main(string[] args)
+    static void Main(string[] args)
     {
-        DateTime startTime = DateTime.Now;
+        int numThreads = Environment.ProcessorCount; // Get the number of logical processors
+        Console.WriteLine("Number of logical processors: " + numThreads);
 
-
-        Thread thread = new Thread(ThreadRun);
-        thread.Start("Chanchai");
-
-        MainRun();
-        // ThreadRun();
-
-        DateTime endTime = DateTime.Now;
-        TimeSpan totalTime = endTime - startTime;
-
-        Console.WriteLine("Total time used: " + totalTime);
-    }
-
-    private static void MainRun()
-    {
-        for (int i = 1; i <= 10; i++)
+        // Create and start multiple threads
+        for (int i = 0; i < numThreads; i++)
         {
-            Console.WriteLine("[1] MainRun : " + i);
-            Thread.Sleep(1500);
+            Thread thread = new Thread(PerformCalculations);
+            thread.Start();
         }
 
-        Console.WriteLine("[1] MainRun finished.");
+        Console.WriteLine("Press any key to stop...");
+        Console.ReadKey();
     }
 
-    private static void ThreadRun(object name)
+    static void PerformCalculations()
     {
-        Console.WriteLine("[2] Hello {0}", name);
-
-        for (int i = 1; i <= 10; i++)
+        while (true)
         {
-            Console.WriteLine("[2] ThreadRun : " + i);
-            Thread.Sleep(1000);
+            // This loop performs CPU-bound calculations
+            double result = 0;
+            for (int i = 0; i < 1000000; i++)
+            {
+                result += Math.Sqrt(i);
+            }
         }
-
-        Console.WriteLine("[2] ThreadRun finished.");
     }
 }
