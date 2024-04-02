@@ -8,8 +8,8 @@ class Program
         DateTime startTime = DateTime.Now;
 
 
-        Thread thread = new Thread(new ThreadStart(ThreadRun));
-        thread.Start();
+        Thread thread = new Thread(ThreadRun);
+        thread.Start("Chanchai");
 
         MainRun();
         // ThreadRun();
@@ -31,8 +31,10 @@ class Program
         Console.WriteLine("[1] MainRun finished.");
     }
 
-    private static void ThreadRun()
+    private static void ThreadRun(object name)
     {
+        Console.WriteLine("[2] Hello {0}", name);
+
         for (int i = 1; i <= 10; i++)
         {
             Console.WriteLine("[2] ThreadRun : " + i);
