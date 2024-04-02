@@ -1,34 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 class Program
 {
+    static int MAX_NUMBER = 50;
+    static int proceed_number = 1;
+
     static void Main(string[] args)
     {
-        int numThreads = Environment.ProcessorCount; // Get the number of logical processors
-        Console.WriteLine("Number of logical processors: " + numThreads);
-
-        // Create and start multiple threads
-        for (int i = 0; i < numThreads; i++)
+        int NUM_THREAD = Environment.ProcessorCount;
+        for (int i = 0; i < NUM_THREAD; i++)
         {
-            Thread thread = new Thread(PerformCalculations);
-            thread.Start();
+            Thread th = new Thread(delegate ()
+            {
+                int threadId = AppDomain.GetCurrentThreadId();
+                while (proceed_number <= MAX_NUMBER)
+                {
+                    int n = proceed_number++;
+                    if (IsPrime(n))
+                    {
+                        Console.WriteLine("Thread {0} => {1} is prime.", threadId, n);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Thread {0} => {1} is not prime.", threadId, n);
+                    }
+                }
+            });
+            th.Start();
         }
-
-        Console.WriteLine("Press any key to stop...");
-        Console.ReadKey();
     }
 
-    static void PerformCalculations()
+    private static bool IsPrime(int n)
     {
-        while (true)
+        for (int i = 2; i < n; i++)
         {
-            // This loop performs CPU-bound calculations
-            double result = 0;
-            for (int i = 0; i < 1000000; i++)
-            {
-                result += Math.Sqrt(i);
-            }
+            if (n % i == 0 && i != n) return false;
         }
+        return true;
     }
 }
